@@ -31,14 +31,14 @@ Cypress.Commands.add('step_1', (phoneNumber, confirmationCode) => {
     cy.get('input[name="mobilePhoneConfirmation"]').type(`${confirmationCode}`)
 })
 Cypress.Commands.add('step_2', (fullName, birthday, email) => {
-    cy.check_step_header(3, 'Заполните контактные данные')
-    cy.get('textarea[name="name"]').type(`${fullName}{enter}`)
     cy.intercept('POST', 'Request URL: https://raiffeisen.cpeople.ru/api/track/dadata/results', {
     statusCode: 200,
     body: {
       name: fullName,
     },
   })
+    cy.check_step_header(3, 'Заполните контактные данные')
+    cy.get('textarea[name="name"]').type(`${fullName}{enter}`)
     cy.get('input[name="birthday"]').type(birthday)
     cy.get('input[placeholder="email@domain.ru"]').type(email)
     cy.get('div[data-step="3"] button[data-context="next"]').click()
