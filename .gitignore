@@ -1,0 +1,23 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# NodeJS
+node_modules
+
+# Projects #
+######################
+cypress/e2e/1-getting-started
+cypress/e2e/2-advanced-examples
