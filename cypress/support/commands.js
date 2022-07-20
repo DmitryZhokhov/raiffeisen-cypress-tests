@@ -84,7 +84,7 @@ Cypress.Commands.add('step_5', (deliveryAddress) => {
       }
     })
     cy.get('textarea[name="deliveryAddress"]').type(`${deliveryAddress}{enter}`)
-    cy.get('div[data-step="6"] button[data-context="next"]').click()
+    cy.get('span').contains('Бесплатная доставка').click()
     cy.get('div[data-step="6"] button[data-context="next"]').click()
 })
 Cypress.Commands.add('check_result', (text) => {
