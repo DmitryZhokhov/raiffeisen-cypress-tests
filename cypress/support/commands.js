@@ -71,3 +71,6 @@ Cypress.Commands.add('step_5', (deliveryAddress) => {
     cy.wait(5000)
     cy.get('div[data-step="6"] button[data-context="next"]').click()
 })
+Cypress.Commands.add('check_result', (text) => {
+    cy.get('div[class="ccform-thx-page__row ccform-thx-page__row--last"] div[class="ccform-thx-page__title"]').contains(text).should('be.visible')
+})
