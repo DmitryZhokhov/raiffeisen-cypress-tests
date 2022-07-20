@@ -31,7 +31,7 @@ Cypress.Commands.add('step_1', (phoneNumber, confirmationCode) => {
     cy.get('input[name="mobilePhoneConfirmation"]').type(`${confirmationCode}`)
 })
 Cypress.Commands.add('step_2', (fullName, birthday, email) => {
-    cy.intercept('POST', 'Request URL: https://raiffeisen.cpeople.ru/api/track/dadata/results', {
+    cy.intercept('POST', 'Request URL: https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', {
     statusCode: 200,
     body: {
       name: fullName,
@@ -39,6 +39,7 @@ Cypress.Commands.add('step_2', (fullName, birthday, email) => {
   })
     cy.check_step_header(3, 'Заполните контактные данные')
     cy.get('textarea[name="name"]').type(`${fullName}{enter}`)
+    cy.wait(500)
     cy.get('input[name="birthday"]').type(birthday)
     cy.get('input[placeholder="email@domain.ru"]').type(email)
     cy.get('div[data-step="3"] button[data-context="next"]').click()
@@ -56,10 +57,14 @@ Cypress.Commands.add('step_4', (birthPlace, permanentAddress) => {
     cy.get('textarea[name="birthPlace"]').type(`${birthPlace}{enter}`)
     cy.get('textarea[name="permanentAddress"]').type(`${permanentAddress}{enter}`)
     cy.get('span').contains('Только РФ').click()
+    cy.wait(500)
     cy.get('div[data-step="5"] button[data-context="next"]').click()
 })
 Cypress.Commands.add('step_5', (deliveryAddress) => {
-    cy.intercept('POST', 'https://oapi.raiffeisen.ru/api/forms/public/v1.0/forms/debit-card-single-field/66/answers', {
+  /* cy.wait('POST', 'https://oapi.raiffeisen.ru/api/forms/public/v1.0/forms/debit-card-single-field/66/answers')
+  .its('request.body')
+  .should('include','"auth":{"phone":"71111111111","token":"YD5j3gq0eyQI8xJQ/Dpx7Cas"}') */
+  cy.intercept('POST', 'https://oapi.raiffeisen.ru/api/forms/public/v1.0/forms/debit-card-single-field/66/answers', {
       body: {
         "success": true,
         "error": {
@@ -77,7 +82,7 @@ Cypress.Commands.add('step_5', (deliveryAddress) => {
           }
         }
       }
-  })
+    })
     cy.get('textarea[name="deliveryAddress"]').type(`${deliveryAddress}{enter}`)
     cy.get('div[data-step="6"] button[data-context="next"]').click()
     cy.get('div[data-step="6"] button[data-context="next"]').click()
