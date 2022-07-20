@@ -23,3 +23,51 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('step_1', (phoneNumber, confirmationCode) => {
+    cy.get('input[name="mobilePhone"]').type(`${phoneNumber}`)
+    cy.get('div[data-step="1"] button[data-context="next"]').click()
+    cy.get('input[name="mobilePhoneConfirmation"]').type(`${confirmationCode}`)
+})
+Cypress.Commands.add('step_2', (fullName, birthday, email) => {
+    cy.get('textarea[name="name"]').type(`${fullName}{enter}`)
+    cy.get('input[name="birthday"]').type(birthday)
+    cy.get('input[placeholder="email@domain.ru"]').type(email)
+    cy.get('div[data-step="3"] button[data-context="next"]').click()
+})
+Cypress.Commands.add('step_3', (passportSeriaNumber, passportIssueByCode, passportIssueDate, passportIssuePlace) => {
+    cy.get('input[name="passportSeriaNumber"]').type(passportSeriaNumber)
+    cy.get('input[name="passportIssueByCode"]').type(passportIssueByCode)
+    cy.get('input[name="passportIssueDate"]').type(passportIssueDate)
+    cy.get('textarea[name="passportIssuePlace"]').type(passportIssuePlace)
+    cy.get('div[data-step="4"] button[data-context="next"]').click()
+})
+Cypress.Commands.add('step_4', (birthPlace, permanentAddress) => {
+    cy.get('textarea[name="birthPlace"]').type(`${birthPlace}{enter}`)
+    cy.get('textarea[name="permanentAddress"]').type(`${permanentAddress}{enter}`)
+    cy.get('div[data-step="5"] button[data-context="next"]').click()
+})
+Cypress.Commands.add('step_5', (deliveryAddress) => {
+    cy.intercept('POST', 'https://oapi.raiffeisen.ru/api/forms/public/v1.0/forms/debit-card-single-field/66/answers', {
+        body: {
+          "success": true,
+          "error": {
+            "code": 0,
+            "message": ""
+          },
+          "meta": [],
+          "data": {
+            "payload": {
+              "answerId": 99999999,
+              "reuseToken": "ed958b64-129e-1111-89d4-48535286570a"
+            },
+            "analytics": {
+              "formName": "DEBIT_CARD_FULL_FORM"
+            }
+          }
+        }
+    })
+    cy.get('textarea[name="deliveryAddress"]').type(`${deliveryAddress}{enter}`)
+    cy.wait(5000)
+    cy.get('div[data-step="6"] button[data-context="next"]').click()
+})
