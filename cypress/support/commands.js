@@ -27,43 +27,43 @@
 Cypress.Commands.add('step_1_phone_validation', (phoneNumber, confirmationCode) => {
     cy.check_step_header(1, 'Введите номер телефона')
     cy.get('input[name="mobilePhone"]').type(`${phoneNumber}`)
-    cy.get('div[data-step="1"] button[data-context="next"]').should('not.be.disabled').click()
+    cy.get('div[data-step="1"] button[data-context="next"]').should('be.enabled').click()
     cy.get('input[name="mobilePhoneConfirmation"]').type(`${confirmationCode}`)
 })
-Cypress.Commands.add('step_2_contact_details', (fullName, birthday, email) => {
-  cy.intercept('POST', 'Request URL: https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', {
-      statusCode: 200,
-      body: {
-          name: fullName,
-      },
-  })
+Cypress.Commands.add('step_2_contact_details', (fullName, gender, birthday, email) => {
   cy.check_step_header(3, 'Заполните контактные данные')
-  cy.intercept('POST', 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio').as('request')
   cy.get('textarea[name="name"]').type(`${fullName}{enter}`)
-  cy.wait('@request')
+  const staticResponse = {
+    body: {
+    "suggestions":[{"value":"Иванов Дмитрий Михайлович","unrestricted_value":"Иванов Дмитрий Михайлович","data":{"surname":"Иванов","name":"Дмитрий","patronymic":"Михайлович","gender":"MALE","source":null,"qc":"0"}}]
+    }
+  }
+  cy.intercept('POST', 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', staticResponse)
+  cy.intercept('POST', 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', (req) => {
+    expect(req.body).to.include('MALE')
+  })
   cy.get('input[name="birthday"]').type(birthday)
-  cy.get('label [value="M"]').should('be.checked')
   cy.get('input[placeholder="email@domain.ru"]').type(email)
-  cy.get('div[data-step="3"] button[data-context="next"]').should('not.be.disabled').click()
+  cy.get(`input[value="${gender}"]`).should('be.checked')
+  cy.get('div[data-step="3"] button[data-context="next"]').should('be.enabled').click()
 })
-
 Cypress.Commands.add('step_3_passport_details', (passportSeriaNumber, passportIssueByCode, passportIssueDate, passportIssuePlace) => {
     cy.check_step_header(4, 'Дмитрий, укажите паспортные данные')
     cy.get('input[name="passportSeriaNumber"]').type(passportSeriaNumber)
     cy.get('input[name="passportIssueByCode"]').type(passportIssueByCode)
     cy.get('input[name="passportIssueDate"]').type(passportIssueDate)
     cy.get('textarea[name="passportIssuePlace"]').type(passportIssuePlace)
-    cy.get('div[data-step="4"] button[data-context="next"]').should('not.be.disabled').click()
+    cy.get('div[data-step="4"] button[data-context="next"]').should('be.enabled').click()
 })
 Cypress.Commands.add('step_4_permanent_address', (birthPlace, permanentAddress) => {
     cy.check_step_header(5, 'Дмитрий, заполните информацию')
     cy.get('textarea[name="birthPlace"]').type(`${birthPlace}{enter}`)
     cy.get('textarea[name="permanentAddress"]').type(`${permanentAddress}{enter}`)
     cy.get('span').contains('Только РФ').click()
-    cy.get('div[data-step="5"] button[data-context="next"]').should('not.be.disabled').click()
+    cy.get('div[data-step="5"] button[data-context="next"]').should('be.enabled').click()
 })
 Cypress.Commands.add('step_5_delivery_details', (deliveryAddress) => {
-  cy.check_step_header(6, 'Дмитрий, выберите удобный способполучения карты')
+  //cy.check_step_header(6, 'Дмитрий, выберите удобный способ получения карты')
   cy.get('textarea[name="deliveryAddress"]').type(`${deliveryAddress}{enter}`)
   cy.get('span').contains('Бесплатная доставка').click()
   cy.intercept('POST', 'https://oapi.raiffeisen.ru/api/forms/public/v1.0/forms/debit-card-single-field/66/answers', {
@@ -85,8 +85,8 @@ Cypress.Commands.add('step_5_delivery_details', (deliveryAddress) => {
         }
       }
     }).as('request')
-  cy.get('div[data-step="6"] button[data-context="next"]').should('not.be.disabled').click()
-  cy.wait('@request', {timeout: 20000}).its('request.body.auth').then((auth) => {
+  cy.get('div[data-step="6"] button[data-context="next"]').should('be.enabled').click()
+  cy.wait('@request', {timeout: 30000}).its('request.body.auth').then((auth) => {
       expect(auth.phone).to.equal("71111111111")
       expect(auth.token).to.equal("YD5j3gq0eyQI8xJQ/Dpx7Cas")
   })
