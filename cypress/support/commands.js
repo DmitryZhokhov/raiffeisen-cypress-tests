@@ -30,7 +30,7 @@ Cypress.Commands.add('step_1_phone_validation', (phoneNumber, confirmationCode) 
     cy.get('div[data-step="1"] button[data-context="next"]').should('be.enabled').click()
     cy.get('input[name="mobilePhoneConfirmation"]').type(`${confirmationCode}`)
 })
-Cypress.Commands.add('step_2_contact_details', (fullName, gender, birthday, email) => {
+Cypress.Commands.add('step_2_contact_details', (fullName, gender1, gender2, birthday, email) => {
   cy.check_step_header(3, 'Заполните контактные данные')
   cy.get('textarea[name="name"]').type(`${fullName}{enter}`)
   const staticResponse = {
@@ -40,11 +40,11 @@ Cypress.Commands.add('step_2_contact_details', (fullName, gender, birthday, emai
   }
   cy.intercept('POST', 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', staticResponse)
   cy.intercept('POST', 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', (req) => {
-    expect(req.body).to.include('MALE')
+    expect(req.body).to.include(`${gender1}`)
   })
   cy.get('input[name="birthday"]').type(birthday)
   cy.get('input[placeholder="email@domain.ru"]').type(email)
-  cy.get(`input[value="${gender}"]`).should('be.checked')
+  cy.get(`input[value="${gender2}"]`).should('be.checked')
   cy.get('div[data-step="3"] button[data-context="next"]').should('be.enabled').click()
 })
 Cypress.Commands.add('step_3_passport_details', (passportSeriaNumber, passportIssueByCode, passportIssueDate, passportIssuePlace) => {
