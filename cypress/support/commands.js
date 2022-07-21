@@ -63,7 +63,7 @@ Cypress.Commands.add('step_4_permanent_address', (birthPlace, permanentAddress) 
     cy.get('div[data-step="5"] button[data-context="next"]').should('be.enabled').click()
 })
 Cypress.Commands.add('step_5_delivery_details', (deliveryAddress) => {
-  //cy.check_step_header(6, 'Дмитрий, выберите удобный способ получения карты')
+  cy.check_step_header(6, 'Дмитрий, выберите удобный способполучения карты')
   cy.get('textarea[name="deliveryAddress"]').type(`${deliveryAddress}{enter}`)
   cy.get('span').contains('Бесплатная доставка').click()
   cy.intercept('POST', 'https://oapi.raiffeisen.ru/api/forms/public/v1.0/forms/debit-card-single-field/66/answers', {
