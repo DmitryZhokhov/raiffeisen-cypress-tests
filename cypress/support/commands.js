@@ -102,7 +102,7 @@ Cypress.Commands.add('step_5_delivery_details', (deliveryAddress) => {
 })
 
 Cypress.Commands.add('check_result', (text) => {
-    cy.get('div[class="ccform-thx-page__row ccform-thx-page__row--last"] div[class="ccform-thx-page__title"]').contains(text).should('be.visible')
+  cy.get('div[class="ccform-thx-page__row ccform-thx-page__row--last"] div[class="ccform-thx-page__title"]').contains(text).should('be.visible')
 })
 
 /* Cypress.Commands.add('click_next', () => {
