@@ -7,4 +7,4 @@ module.exports = defineConfig({
     
   },
   retries: 2
-});
+})
