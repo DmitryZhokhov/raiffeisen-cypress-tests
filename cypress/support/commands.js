@@ -37,7 +37,7 @@ Cypress.Commands.add('step_1_phone_validation', (phoneNumber, confirmationCode) 
 
 Cypress.Commands.add('step_2_contact_details', (surname, name, patronymic, gender, genderValue, birthday, email) => {
   cy.check_step_header('2')
-  cy.get('textarea[name="name"]').type(`${surname} ${name} ${patronymic}{enter}`)
+  cy.get('textarea[name="name"]').type(`${surname} ${name} ${patronymic}`)
   const staticResponse = {
     body: {
     "suggestions":[{"value":`${surname} ${name} ${patronymic}`,"unrestricted_value":`${surname} ${name} ${patronymic}`,"data":{"surname":`${surname}`,"name":`${name}`,"patronymic":`${patronymic}`,"gender":`${gender}`,"source":null,"qc":"0"}}]
@@ -45,7 +45,7 @@ Cypress.Commands.add('step_2_contact_details', (surname, name, patronymic, gende
   }
   cy.intercept('POST', 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio', staticResponse).as('request')
   cy.wait('@request', {timeout: 30000}).then((xhr) => {
-    const response = xhr.response.body.suggestions[0].data.gender;
+    const response = xhr.response.body.suggestions[0].data.gender
     expect(response).to.eq(`${gender}`)
   })
   cy.get('input[name="birthday"]').type(birthday)
