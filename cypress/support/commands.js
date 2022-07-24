@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('check_step_header', (step) => {
-  cy.get('[data-step-hidden="2"]', {timeout: 10000}).should('have.text', ` (шаг ${step} из 5)`)
+  cy.get('[data-step-hidden="2"]', {timeout: 15000}).should('have.text', ` (шаг ${step} из 5)`)
 })
 
 Cypress.Commands.add('step_1_phone_validation', (phoneNumber, confirmationCode) => {
