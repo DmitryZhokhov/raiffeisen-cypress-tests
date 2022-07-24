@@ -2,7 +2,7 @@ describe('Raiffeisen Tests', () => {
 
   beforeEach(() => {
     cy.viewport(1280, 720)
-    cy.visit('https://www.raiffeisen.ru/')
+    cy.visit('/')
   })
 
     it('Order debit card by Male', () => {
