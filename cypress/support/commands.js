@@ -61,14 +61,14 @@ Cypress.Commands.add('step_3_passport_details', (passportSeriaNumber, passportIs
 })
 
 Cypress.Commands.add('step_4_permanent_address', (birthPlace, permanentAddress) => {
-  cy.get('textarea[name="birthPlace"]').type(`${birthPlace}`)
-  cy.get('textarea[name="permanentAddress"]').type(`${permanentAddress}`)
+  cy.get('textarea[name="birthPlace"]').type(`${birthPlace}{enter}`)
+  cy.get('textarea[name="permanentAddress"]').type(`${permanentAddress}{enter}`)
   cy.get('span').contains('Только РФ').click()
   cy.get('div[data-step="5"] button[data-context="next"]').click()
 })
 
 Cypress.Commands.add('step_5_delivery_details', (deliveryAddress) => {
-  cy.get('textarea[name="deliveryAddress"]').type(`${deliveryAddress}`)
+  cy.get('textarea[name="deliveryAddress"]').type(`${deliveryAddress}{enter}`)
   cy.intercept('POST', 'https://oapi.raiffeisen.ru/api/forms/public/v1.0/forms/debit-card-single-field/66/answers', {
       body: {
         "success": true,
